@@ -43,6 +43,17 @@ public class ParadoxPartitionHandler extends EntityBaseHandler {
     protected void updateEntity() {
         int index = calculateEntityIndex();
         List<Partition> partitions = ParadoxPanel.getInstance().getPartitions();
+        if (partitions == null) {
+            logger.debug(
+                    "Partitions collection of Paradox Panel object is null. Probably not yet initialized. Skipping update.");
+            return;
+        }
+        if (partitions.size() <= index) {
+            logger.debug("Attempted to access partition out of bounds of current partitions list. Index: {}, List: {}",
+                    index, partitions);
+            return;
+        }
+
         Partition partition = partitions.get(index);
         if (partition != null) {
             updateState(PARTITION_LABEL_CHANNEL_UID, new StringType(partition.getLabel()));

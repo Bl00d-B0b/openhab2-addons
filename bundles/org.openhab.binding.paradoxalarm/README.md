@@ -18,9 +18,9 @@ Currently binding supports the following panels: EVO192, EVO48(not tested), EVO9
 | Thing      | Thing Type | Description                                                    |
 |------------|------------|----------------------------------------------------------------|
 | ip150      | Bridge     | The bridge is used to communicate with IP150 ethernet module attached to Paradox security system.|
-| panel      | Thing      | this is representation of Paradox panel. Has the general information about the main panel module, i.e. serial number, firmware/hardware/software versions, panel type, etc...|
-| partition  | Thing      | provides "state"(armed, disarmed, in alarm), "partition label" and "additional states" are aggregated additional states which are booleans (ready to arm, trouble, force instant arm ready, etc...)|
-| zone       | Thing      | Paradox zone. Can be anything - magnetic, motion or any other opened/closed sensor. State channel is contact, low battery and is tampered channels are switch, label is String |
+| panel      | Thing      | This is representation of Paradox panel. Has the general information about the main panel module, i.e. serial number, firmware/hardware/software versions, panel type, etc...|
+| partition  | Thing      | The partition is grouped aggregation of multiple zones. It's also referred in Paradox Babyware as "Area". |
+| zone       | Thing      | Paradox zone. Can be anything - magnetic, motion or any other opened/closed sensor. State channel is contact, "low battery" and "is tampered" channels are switch, label is String |
 
 ## Things configuration
 
@@ -28,22 +28,25 @@ Currently binding supports the following panels: EVO192, EVO48(not tested), EVO9
 
 | Parameter         | Description                            |
 |-------------------|----------------------------------------|
-| refresh           | Value is in seconds. Defines the refresh interval when the binding polls from paradox system.|
-| ip150Password     | The password to your IP150 (not your panel PIN).|
-| pcPassword        | The code 3012 setting. Default value is 0000.|
-| ipAddress         | IP address of your IP150.|
-| port              | The port used for data communication. Default value is 10000.|
-| panelType         | Optional parameter. Will be used if discovery does not identify the panel. Otherwise provide EVO48, EVO96, EVO192, etc...|
-| reconnectWaitTime | Value is in seconds. The time to wait before a reconnect occurs after socket timeout.|
-| maxPartitions     | Optional parameter which sets maximum partitions to use during refresh. If not set, maximum allowed amount from panelType will be used.|
-| maxZones          | Optional parameter which sets maximum zones to use during refresh. If not set, maximum allowed amount from panelType will be used.|
+| refresh           | Value is in seconds. Defines the refresh interval when the binding polls from paradox system. Optional parameter. Default 5 seconds.|
+| ip150Password     | The password to your IP150 (not your panel PIN). Mandatory parameter.  |
+| pcPassword        | The panel programming code 3012 setting. Optional parameter. Default value is 0000.|
+| ipAddress         | IP address or hostname of your IP150. If hostname is used must be resolvable by OpenHAB. Mandatory parameter.  |
+| port              | The port used for data communication. Optional parameter. Default value is 10000.|
+| panelType         | If parameter is passed, auto-discovery of panel type will be skipped. Provide string - EVO48, EVO96, EVO192, etc... Optional parameter. |
+| reconnectWaitTime | Value is in seconds. The time to wait before a reconnect occurs after socket timeout. Optional parameter. Default value is 30 seconds.|
+| maxPartitions     | Sets maximum partitions to use during refresh. If not set, maximum allowed amount from panelType will be used. Optional parameter. |
+| maxZones          | Sets maximum zones to use during refresh. If not set, maximum allowed amount from panelType will be used. Optional parameter.|
+| encrypt           | Sets if encryption has to be used. Optional parameter. Default value is false |
 
 ### IP150 bridge channels
 
 | Channel             | Description                                    |
 |---------------------|------------------------------------------------|
 |communicationCommand | Possible values [LOGOUT, LOGIN, RESET]         |
+|communicationState   | Shows the communication status to Paradox. Different from Bridge status. Bridge may be online and able to receive commands but communication may be offline due to various reasons. Possible values [Offline, Online] |
 
+#### Communication command channel allowed values
 | Value  | Description                                                                        |
 |--------|------------------------------------------------------------------------------------|
 | LOGOUT | Logs out and disconnects from Paradox alarm system                                 |
@@ -89,7 +92,7 @@ Currently binding supports the following panels: EVO192, EVO48(not tested), EVO9
 ## Example things configuration
 
 ```java
-   Bridge paradoxalarm:ip150:ip150 [refresh=5, panelType="EVO192", ip150Password="asdfasdf", pcPassword="1234", ipAddress=XXX.XXX.XXX.XXX", port=10000 ] {
+   Bridge paradoxalarm:ip150:ip150 [refresh=5, panelType="EVO192", ip150Password="********", pcPassword="0000", ipAddress=XXX.XXX.XXX.XXX", port=10000, reconnectWaitTime=10, maxPartitions=4, maxZones=50, encrypt=true ] {
 
         Thing panel panel
 
@@ -112,6 +115,8 @@ Currently binding supports the following panels: EVO192, EVO48(not tested), EVO9
     Group Paradox "Paradox security group"
     Group Partitions "Paradox partitions" (Paradox)
     Group Floor1MUC "Magnetic sensors - Floor 1" (Paradox)
+    Group Floor2MUC "Magnetic sensors - Floor 2" (Paradox)
+    Group Floor3MUC "Magnetic sensors - Floor 3" (Paradox)
     Group PIRSensors "Motion sensors" (Paradox)
 
 //COMMUNICATOR BRIDGE
@@ -127,7 +132,6 @@ Currently binding supports the following panels: EVO192, EVO48(not tested), EVO9
 
 //PARTITIONS
     String partition1State "Magnetic sensors - Floor 1: [%s]" (Partitions) { channel = "paradoxalarm:partition:ip150:partition1:state" }
-    String partition1AdditionalStates "Floor1 MUC additional states: [%s]" (Partitions) { channel = "paradoxalarm:partition:ip150:partition1:additionalStates" }
 
 //ZONES
     Contact CorridorFl1_PIR_state "Corridor Fl1 motion: [%s]" (PIRSensors) { channel = "paradoxalarm:zone:ip150:MotionSensor1:opened" }
@@ -137,27 +141,16 @@ Currently binding supports the following panels: EVO192, EVO48(not tested), EVO9
 ## Example sitemap configuration
 
 ```java
-   Text label="Security" icon="lock"{
-        Frame label="Panel"{
-            Text item=panelState valuecolor=[panelState=="Online"="green", panelState=="Offline"="red"]
-            Text item=panelType
-            Text item=serialNumber
-            Text item=hardwareVersion
-            Text item=applicationVersion
-            Text item=bootloaderVersion
-        }
+    Text label="Security" icon="lock" {
         Frame label="IP150 communication" {
-            Switch item=paradoxSendCommand mappings=["LOGOUT"="Logout", "LOGIN"="Login", "RESET"="Reset"]
+            Text item=panelState valuecolor=[panelState=="Online"="green", panelState=="Offline"="red"]
+            Selection item=paradoxSendCommand mappings=["LOGOUT"="Logout", "LOGIN"="Login", "RESET"="Reset"]
         }
         Frame label="Partitions" {
             Text item=partition1State valuecolor=[partition1State=="Disarmed"="green", partition1State=="Armed"="red"]
-            Text item=partition1AdditionalStates
             Text item=partition2State valuecolor=[partition2State=="Disarmed"="green", partition2State=="Armed"="red"]
-            Text item=partition2AdditionalStates
             Text item=partition3State valuecolor=[partition3State=="Disarmed"="green", partition3State=="Armed"="red"]
-            Text item=partition3AdditionalStates
             Text item=partition4State valuecolor=[partition4State=="Disarmed"="green", partition4State=="Armed"="red"]
-            Text item=partition4AdditionalStates
         }
         Frame label="Zones" {
             Group item=Floor1MUC

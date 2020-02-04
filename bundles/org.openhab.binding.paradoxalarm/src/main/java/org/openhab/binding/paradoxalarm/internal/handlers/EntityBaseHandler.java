@@ -44,7 +44,7 @@ public abstract class EntityBaseHandler extends BaseThingHandler {
 
     @Override
     public void initialize() {
-        logger.debug("Start initializing. {}", thing.getLabel());
+        logger.trace("Start initializing. {}", thing.getUID());
         updateStatus(ThingStatus.UNKNOWN);
 
         config = getConfigAs(EntityConfiguration.class);
@@ -53,22 +53,24 @@ public abstract class EntityBaseHandler extends BaseThingHandler {
     }
 
     private void initializeDelayed() {
-        logger.trace("Start initializeDelayed() in {}", getThing().getUID());
+        logger.debug("Start initializeDelayed() in {}", getThing().getUID());
         ParadoxPanel panel = ParadoxPanel.getInstance();
         if (!panel.isPanelSupported()) {
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
-                "Panel " + panel.getPanelInformation().getPanelType().name() + " is not supported.");
+                    "Panel " + panel.getPanelInformation().getPanelType().name() + " is not supported.");
         }
     }
 
     @Override
     public void handleCommand(ChannelUID channelUID, Command command) {
+        if (ThingStatus.OFFLINE == getThing().getStatus()) {
+            logger.debug("Received REFRESH command but {} is OFFLINE with the following detailed status {}",
+                    getThing().getUID(), getThing().getStatusInfo());
+            return;
+        }
+
         if (command instanceof RefreshType) {
-            if (ThingStatus.ONLINE == getThing().getStatus()) {
-                updateEntity();
-            } else {
-                logger.debug("Received REFRESH command but {} has the following detailed status {}", getThing().getUID(), getThing().getStatusInfo());
-            }
+            updateEntity();
         }
     }
 

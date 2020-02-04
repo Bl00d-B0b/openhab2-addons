@@ -22,12 +22,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The {@link EpromRequestPayload} Abstract class which contains common logic used in RAM and EPROM payload generation
+ * The {@link MemoryRequestPayload} Abstract class which contains common logic used in RAM and EPROM payload generation
  * classes.
  *
  * @author Konstantin Polihronov - Initial contribution
  */
-public abstract class MemoryRequestPayload implements IPPacketPayload {
+public abstract class MemoryRequestPayload implements IPayload {
 
     private final Logger logger = LoggerFactory.getLogger(MemoryRequestPayload.class);
 

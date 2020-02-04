@@ -53,7 +53,6 @@ public class ParadoxPanel implements IDataUpdateListener {
             logger.info("Paradox system is supported. Panel data retrieved={} ", panelInformation);
             createPartitions();
             createZones();
-            updateEntitiesStates();
         } else {
             throw new ParadoxRuntimeException(
                     "Unsupported panel type. Type: " + panelInformation.getPanelType().name());
@@ -65,6 +64,10 @@ public class ParadoxPanel implements IDataUpdateListener {
     }
 
     public boolean isPanelSupported() {
+        if (panelInformation == null) {
+            return false;
+        }
+
         PanelType panelType = panelInformation.getPanelType();
         return panelType == PanelType.EVO48 || panelType == PanelType.EVO192 || panelType == PanelType.EVOHD;
     }
@@ -137,13 +140,23 @@ public class ParadoxPanel implements IDataUpdateListener {
     public void update() {
         if (panelInformation == null || partitions == null || zones == null) {
             createModelEntities();
-        } else {
-            updateEntitiesStates();
         }
+        updateEntitiesStates();
     }
 
     public void setCommunicator(IParadoxCommunicator communicator) {
         this.communicator = communicator;
+    }
+
+    @Override
+    public String toString() {
+        return "ParadoxPanel [panelInformation=" + panelInformation + "]";
+    }
+
+    public void dispose() {
+        this.panelInformation = null;
+        this.partitions = null;
+        this.zones = null;
     }
 
 }

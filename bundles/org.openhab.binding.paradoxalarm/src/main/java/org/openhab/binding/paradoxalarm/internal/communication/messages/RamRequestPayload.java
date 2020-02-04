@@ -20,7 +20,7 @@ import org.openhab.binding.paradoxalarm.internal.util.ParadoxUtil;
  *
  * @author Konstantin Polihronov - Initial contribution
  */
-public class RamRequestPayload extends MemoryRequestPayload implements IPPacketPayload {
+public class RamRequestPayload extends MemoryRequestPayload implements IPayload {
 
     private static final byte CONTROL_BYTE = ParadoxUtil.setBit((byte) 0, 7, 1);
 

@@ -53,6 +53,7 @@ public class ParadoxAlarmBindingConstants {
 
     // List of all Channel UIDs
     public static final String IP150_COMMUNICATION_COMMAND_CHANNEL_UID = "communicationCommand";
+    public static final String IP150_COMMUNICATION_STATE_CHANNEL_UID = "communicationState";
 
     public static final String PANEL_STATE_CHANNEL_UID = "state";
     public static final String PANEL_SERIAL_NUMBER_PROPERTY_NAME = "serialNumber";
