@@ -19,8 +19,6 @@ import java.util.Arrays;
 import org.junit.Test;
 import org.openhab.binding.paradoxalarm.internal.communication.crypto.EncryptionHandler;
 import org.openhab.binding.paradoxalarm.internal.util.ParadoxUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The {@link TestEncryptionHandler} This test tests various functions from ParadoxUtils class
@@ -29,14 +27,8 @@ import org.slf4j.LoggerFactory;
  */
 public class TestEncryptionHandler {
 
-    private final Logger logger = LoggerFactory.getLogger(TestEncryptionHandler.class);
-
     private static final String INPUT_STRING = "My test string for encryption.";
     private static final String KEY = "MyKeyToEncrypt";
-
-    static {
-        java.lang.System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
-    }
 
     @Test
     public void testEncryptDecryptString() {

@@ -15,8 +15,6 @@ package tests;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openhab.binding.paradoxalarm.internal.util.ParadoxUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The {@link TestParadoxUtil} This test tests various functions from ParadoxUtils class
@@ -24,12 +22,6 @@ import org.slf4j.LoggerFactory;
  * @author Konstantin Polihronov - Initial contribution
  */
 public class TestParadoxUtil {
-
-    private final Logger logger = LoggerFactory.getLogger(TestParadoxUtil.class);
-
-    static {
-        java.lang.System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
-    }
 
     @Test
     public void testExtendArray() {
