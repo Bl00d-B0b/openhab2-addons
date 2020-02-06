@@ -57,7 +57,7 @@ public abstract class EntityBaseHandler extends BaseThingHandler {
         ParadoxPanel panel = ParadoxPanel.getInstance();
         if (!panel.isPanelSupported()) {
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
-                    "Panel " + panel.getPanelInformation().getPanelType().name() + " is not supported.");
+                    "Panel is not supported or asynchronous update is still in progress. Cannot update information");
         }
     }
 

@@ -81,7 +81,11 @@ public class ParadoxPanel implements IDataUpdateListener {
         List<byte[]> currentPartitionFlags = communicator.getPartitionFlags();
         for (int i = 0; i < partitions.size(); i++) {
             Partition partition = partitions.get(i);
-            partition.setState(parser.calculatePartitionState(currentPartitionFlags.get(i)));
+            if (i < currentPartitionFlags.size()) {
+                partition.setState(parser.calculatePartitionState(currentPartitionFlags.get(i)));
+            } else {
+                logger.debug("Partition flags collection is smaller than the number of partitions.");
+            }
         }
 
         ZoneStateFlags zoneStateFlags = communicator.getZoneStateFlags();
