@@ -126,7 +126,7 @@ public class EvoCommunicator extends GenericCommunicator implements IParadoxComm
     }
 
     private ParadoxIPPacket createSerialPassthroughPacket(IPayload payload) {
-        ParadoxIPPacket packet = new ParadoxIPPacket(payload.getBytes(), true);
+        ParadoxIPPacket packet = new ParadoxIPPacket(payload.getBytes());
         packet.setMessageType(HeaderMessageType.SERIAL_PASSTHRU_REQUEST).setUnknown0((byte) 0x14);
         return packet;
     }

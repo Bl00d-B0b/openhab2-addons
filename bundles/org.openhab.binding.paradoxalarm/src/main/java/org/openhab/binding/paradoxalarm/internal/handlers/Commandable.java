@@ -10,16 +10,14 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  */
-package org.openhab.binding.paradoxalarm.internal.communication;
+package org.openhab.binding.paradoxalarm.internal.handlers;
 
 /**
- * The {@link RequestType}. Enum with possible request types to Paradox system.
+ * The {@link Commandable} Interface for entities that can handle string commands
  *
  * @author Konstantin Polihronov - Initial contribution
  */
-public enum RequestType {
-    LOGON_SEQUENCE,
-    RAM,
-    EPROM,
-    PARTITION_COMMAND
+public interface Commandable {
+
+    void handleCommand(String command);
 }

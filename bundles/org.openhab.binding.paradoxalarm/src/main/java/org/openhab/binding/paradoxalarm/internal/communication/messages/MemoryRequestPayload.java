@@ -51,9 +51,7 @@ public abstract class MemoryRequestPayload implements IPayload {
 
     @Override
     public byte[] getBytes() {
-        try {
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             outputStream.write(ParadoxUtil.shortToByteArray(MESSAGE_START));
             outputStream.write(calculateControlByte());
             outputStream.write((byte) 0x00);

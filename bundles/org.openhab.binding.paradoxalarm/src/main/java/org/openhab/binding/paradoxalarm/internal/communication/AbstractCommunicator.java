@@ -147,7 +147,10 @@ public abstract class AbstractCommunicator implements IParadoxInitialLoginCommun
                     handleWrongPacket(result, request);
                 }
 
-                request.getResponseReceiver().receiveResponse(response, this);
+                IResponseReceiver responseReceiver = request.getResponseReceiver();
+                if (responseReceiver != null) {
+                    responseReceiver.receiveResponse(response, this);
+                }
             } else if (SyncQueue.getInstance().peekReceiveQueue()
                     .isTimeStampExpired(PACKET_EXPIRATION_TRESHOLD_MILLISECONDS)) {
                 logger.trace("Unable to receive proper package for {} time. Rescheduling...",

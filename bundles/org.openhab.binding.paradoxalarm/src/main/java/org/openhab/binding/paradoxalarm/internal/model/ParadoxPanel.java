@@ -152,6 +152,10 @@ public class ParadoxPanel implements IDataUpdateListener {
         this.communicator = communicator;
     }
 
+    public IParadoxCommunicator getCommunicator() {
+        return communicator;
+    }
+
     @Override
     public String toString() {
         return "ParadoxPanel [panelInformation=" + panelInformation + "]";

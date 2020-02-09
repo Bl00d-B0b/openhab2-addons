@@ -26,8 +26,8 @@ public abstract class Request implements IRequest {
     private RequestType type;
     private IResponseReceiver receiver;
 
-    public Request(RequestType type, IPPacket payload, IResponseReceiver receiver) {
-        this.packet = payload;
+    public Request(RequestType type, IPPacket packet, IResponseReceiver receiver) {
+        this.packet = packet;
         this.type = type;
         this.receiver = receiver;
     }

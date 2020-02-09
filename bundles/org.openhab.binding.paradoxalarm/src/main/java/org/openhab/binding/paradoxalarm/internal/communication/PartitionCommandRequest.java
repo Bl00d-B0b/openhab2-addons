@@ -12,14 +12,17 @@
  */
 package org.openhab.binding.paradoxalarm.internal.communication;
 
+import org.openhab.binding.paradoxalarm.internal.communication.messages.IPPacket;
+
 /**
- * The {@link RequestType}. Enum with possible request types to Paradox system.
+ * The {@link PartitionCommandRequest} Request object for wrapping partition command.
  *
  * @author Konstantin Polihronov - Initial contribution
  */
-public enum RequestType {
-    LOGON_SEQUENCE,
-    RAM,
-    EPROM,
-    PARTITION_COMMAND
+public class PartitionCommandRequest extends Request {
+
+    public PartitionCommandRequest(RequestType type, IPPacket packet, IResponseReceiver receiver) {
+        super(type, packet, receiver);
+    }
+
 }

@@ -33,14 +33,16 @@ public class ParadoxIPPacket implements IPPacket {
     private PacketHeader header;
     private byte[] payload;
 
+    public ParadoxIPPacket(byte[] bytes) {
+        this(bytes, true);
+    }
+
     @SuppressWarnings("null")
     public ParadoxIPPacket(byte[] payload, boolean isChecksumRequired) {
         this.payload = payload != null ? payload : new byte[0];
-
         if (isChecksumRequired) {
             payload[payload.length - 1] = ParadoxUtil.calculateChecksum(payload);
         }
-
         short payloadLength = (short) (payload != null ? payload.length : 0);
         header = new PacketHeader(payloadLength);
     }

@@ -1,7 +1,7 @@
 # Paradox Alarm System binding
 
 This binding is intended to provide basic support for Paradox Alarm system.
-Currently the binding does not support active communication, i.e. you cannot change states (arming, disarming). The intention is to use it only for monitoring of your security system.
+
 With the power of openHAB this binding can be used for complex decision rules combining motion/magnetic sensor or whole partitions states with different scenarios.
 
 Examples: 
@@ -55,32 +55,34 @@ Currently binding supports the following panels: EVO192, EVO48(not tested), EVO9
 
 ### Entities (zones, partitions) configuration parameters:
 
-| Value  | Description                                                                        |
-|--------|------------------------------------------------------------------------------------|
-| id     | The numeric ID of the zone/partition                                               |
+| Value             | Description                                                                        |
+|-------------------|------------------------------------------------------------------------------------|
+| id                | The numeric ID of the zone/partition                                               |
+| disarmEnabled     | Optional boolean flag. Valid for partitions. When set to true the command DISARM will be allowed for the partition where the flag is enabled. CAUTION: Enabling DISARM command can be dangerous. If attacker can gain access to your OpenHAB (via API or UI), this command can be used to disarm your armed partition (area) |
 
 ### Partition channels:
 
-| Channel                  | Type    | Description                                                                                 |
-|--------------------------|---------|---------------------------------------------------------------------------------------------|
-| partitionLabel           | String  | Label of partition inside Paradox configuration                                             |
-| state                    | String  |State of partition (armed, disarmed, in alarm)                                               |
-| additionalState          | String  | This used to be a channel where all different states were consolidated as semi-colon separated string. With implementation of each state as channel additional states should be no longer used. (deprecated channel) |
-| readyToArm               | Switch  | Partition is Ready to arm                                                                   |
-| inExitDelay              | Switch  | Partition is in Exit delay                                                                  |
-| inEntryDelay             | Switch  | Partition in Entry Delay                                                                    |
-| inTrouble                | Switch  | Partition has trouble                                                                       |
-| alarmInMemory            | Switch  | Partition has alarm in memory                                                               |
-| zoneBypass               | Switch  | Partition is in Zone Bypass                                                                 |
-| zoneInTamperTrouble      | Switch  | Partition is in Tamper Trouble                                                              |
-| zoneInLowBatteryTrouble  | Switch  | Partition has zone in Low Battery Trouble                                                   |
-| zoneInFireLoopTrouble    | Switch  | Partition has zone in Fire Loop Trouble                                                     |
-| zoneInSupervisionTrouble | Switch  | Partition has zone in Supervision Trouble                                                   |
-| stayInstantReady         | Switch  | Partition is in state Stay Instant Ready                                                    |
-| forceReady               | Switch  | Partition is in state Force Ready                                                           |
-| bypassReady              | Switch  | Partition is in state Bypass Ready                                                          |
-| inhibitReady             | Switch  | Partition is in state Inhibit Ready                                                         |
-| allZonesClosed           | Contact | All zones in partition are currently closed                                                 |
+| Channel                  | Type    | Description                                                                                   |
+|--------------------------|---------|-----------------------------------------------------------------------------------------------|
+| partitionLabel           | String  | Label of partition inside Paradox configuration                                               |
+| state                    | String  |State of partition (armed, disarmed, in alarm)                                                 |
+| additionalState          | String  | This used to be a channel where all different states were consolidated as semi-colon separated string. With implementation of each state as channel additional states should be no longer used. (deprecated channel)                             |
+| readyToArm               | Switch  | Partition is Ready to arm                                                                     |
+| inExitDelay              | Switch  | Partition is in Exit delay                                                                    |
+| inEntryDelay             | Switch  | Partition in Entry Delay                                                                      |
+| inTrouble                | Switch  | Partition has trouble                                                                         |
+| alarmInMemory            | Switch  | Partition has alarm in memory                                                                 |
+| zoneBypass               | Switch  | Partition is in Zone Bypass                                                                   |
+| zoneInTamperTrouble      | Switch  | Partition is in Tamper Trouble                                                                |
+| zoneInLowBatteryTrouble  | Switch  | Partition has zone in Low Battery Trouble                                                     |
+| zoneInFireLoopTrouble    | Switch  | Partition has zone in Fire Loop Trouble                                                       |
+| zoneInSupervisionTrouble | Switch  | Partition has zone in Supervision Trouble                                                     |
+| stayInstantReady         | Switch  | Partition is in state Stay Instant Ready                                                      |
+| forceReady               | Switch  | Partition is in state Force Ready                                                             |
+| bypassReady              | Switch  | Partition is in state Bypass Ready                                                            |
+| inhibitReady             | Switch  | Partition is in state Inhibit Ready                                                           |
+| allZonesClosed           | Contact | All zones in partition are currently closed                                                   |
+| command                  | String  | Command to be send to partition. Can be (ARM, DISARM, FORCE_ARM, INSTANT_ARM, STAY_ARM, BEEP) |
 
 ### Zone channels:
 
@@ -121,17 +123,11 @@ Currently binding supports the following panels: EVO192, EVO48(not tested), EVO9
 
 //COMMUNICATOR BRIDGE
     String paradoxSendCommand "Send command to IP150" {channel="paradoxalarm:ip150:ip150:communicationCommand"}
-
-//PANEL
-    String panelState "Paradox panel state: [%s]" (Paradox) { channel = "paradoxalarm:panel:ip150:panel:state" }
-    String panelType "Paradox panel type: [%s]" (Paradox) { channel = "paradoxalarm:panel:ip150:panel:panelType" }
-    String serialNumber "Paradox Serial number: [%s]" (Paradox) { channel = "paradoxalarm:panel:ip150:panel:serialNumber" }
-    String hardwareVersion "Paradox HW version: [%s]" (Paradox) { channel = "paradoxalarm:panel:ip150:panel:hardwareVersion" }
-    String applicationVersion "Paradox Application version: [%s]" (Paradox) { channel = "paradoxalarm:panel:ip150:panel:applicationVersion" }
-    String bootloaderVersion "Paradox Bootloader version: [%s]" (Paradox) { channel = "paradoxalarm:panel:ip150:panel:bootloaderVersion" }
+    String panelState "Paradox panel state: [%s]"<network> (Paradox) { channel = "paradoxalarm:ip150:ip150:communicationState" }
 
 //PARTITIONS
     String partition1State "Magnetic sensors - Floor 1: [%s]" (Partitions) { channel = "paradoxalarm:partition:ip150:partition1:state" }
+    String  partition1Command "Command for MUCFL1: [%s]" <lock> (Partitions) { channel = "paradoxalarm:partition:ip150:partition1:command" }
 
 //ZONES
     Contact CorridorFl1_PIR_state "Corridor Fl1 motion: [%s]" (PIRSensors) { channel = "paradoxalarm:zone:ip150:MotionSensor1:opened" }
@@ -148,9 +144,7 @@ Currently binding supports the following panels: EVO192, EVO48(not tested), EVO9
         }
         Frame label="Partitions" {
             Text item=partition1State valuecolor=[partition1State=="Disarmed"="green", partition1State=="Armed"="red"]
-            Text item=partition2State valuecolor=[partition2State=="Disarmed"="green", partition2State=="Armed"="red"]
-            Text item=partition3State valuecolor=[partition3State=="Disarmed"="green", partition3State=="Armed"="red"]
-            Text item=partition4State valuecolor=[partition4State=="Disarmed"="green", partition4State=="Armed"="red"]
+            Selection item=partition1Command mappings=["ARM"="Arm", "FORCE_ARM"="Force Arm", "STAY_ARM"="Stay Arm", "INSTANT_ARM"="Instant Arm", "BEEP"="Keyboard Beep"]
         }
         Frame label="Zones" {
             Group item=Floor1MUC

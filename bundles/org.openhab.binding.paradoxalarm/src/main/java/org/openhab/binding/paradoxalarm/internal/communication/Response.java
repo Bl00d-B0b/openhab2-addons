@@ -127,6 +127,13 @@ public class Response implements IResponse {
                     payload = Arrays.copyOfRange(packetBytes, 16, packetBytes.length);
                     return;
             }
+        } else if (requestType == RequestType.PARTITION_COMMAND) {
+            if (highNibble == 0x4) {
+                header = Arrays.copyOfRange(packetBytes, 0, 16);
+                payload = Arrays.copyOfRange(packetBytes, 16, 16 + packetBytes[1]);
+                logger.debug("Received valid response for partition command");
+                return;
+            }
         }
 
         // All other cases are considered wrong results for the parser and are probably live events which cannot be
