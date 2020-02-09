@@ -274,6 +274,7 @@ public class EvoCommunicator extends GenericCommunicator implements IParadoxComm
         }
     }
 
+    @Override
     public MemoryMap getMemoryMap() {
         return memoryMap;
     }

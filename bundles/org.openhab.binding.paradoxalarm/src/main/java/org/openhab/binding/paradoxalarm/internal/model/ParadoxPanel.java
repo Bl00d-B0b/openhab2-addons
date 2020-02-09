@@ -12,6 +12,9 @@
  */
 package org.openhab.binding.paradoxalarm.internal.model;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +43,10 @@ public class ParadoxPanel implements IDataUpdateListener {
     private List<Zone> zones;
     private IParadoxParser parser;
     private IParadoxCommunicator communicator;
+    private int acLevel;
+    private double batteryLevel;
+    private double dcLevel;
+    private ZonedDateTime panelTime;
 
     private ParadoxPanel() {
         this.parser = new EvoParser();
@@ -93,6 +100,15 @@ public class ParadoxPanel implements IDataUpdateListener {
             Zone zone = zones.get(i);
             zone.setZoneState(parser.calculateZoneState(zone.getId(), zoneStateFlags));
         }
+
+        byte[] firstPage = communicator.getMemoryMap().getElement(0);
+        int year = firstPage[18] * 100 + firstPage[19];
+        panelTime = ZonedDateTime.of(
+                LocalDateTime.of(year, firstPage[20], firstPage[21], firstPage[22], firstPage[23], firstPage[24]),
+                ZoneId.of("UTC"));
+        acLevel = firstPage[25] & 0xFF;
+        batteryLevel = (firstPage[26] & 0xFF) / 10;
+        dcLevel = (firstPage[27] & 0xFF) / 10;
     }
 
     private List<Zone> createZones() {
@@ -114,6 +130,20 @@ public class ParadoxPanel implements IDataUpdateListener {
             logger.debug("Partition {}:\t{}", i + 1, partition.getState().getMainState());
         }
         return partitions;
+    }
+
+    @Override
+    public void update() {
+        if (panelInformation == null || partitions == null || zones == null) {
+            createModelEntities();
+        }
+        updateEntitiesStates();
+    }
+
+    public void dispose() {
+        this.panelInformation = null;
+        this.partitions = null;
+        this.zones = null;
     }
 
     public ParadoxInformation getPanelInformation() {
@@ -140,12 +170,20 @@ public class ParadoxPanel implements IDataUpdateListener {
         return communicator.isOnline();
     }
 
-    @Override
-    public void update() {
-        if (panelInformation == null || partitions == null || zones == null) {
-            createModelEntities();
-        }
-        updateEntitiesStates();
+    public int getAcLevel() {
+        return acLevel;
+    }
+
+    public double getBatteryLevel() {
+        return batteryLevel;
+    }
+
+    public double getDcLevel() {
+        return dcLevel;
+    }
+
+    public ZonedDateTime getPanelTime() {
+        return panelTime;
     }
 
     public void setCommunicator(IParadoxCommunicator communicator) {
@@ -160,11 +198,4 @@ public class ParadoxPanel implements IDataUpdateListener {
     public String toString() {
         return "ParadoxPanel [panelInformation=" + panelInformation + "]";
     }
-
-    public void dispose() {
-        this.panelInformation = null;
-        this.partitions = null;
-        this.zones = null;
-    }
-
 }

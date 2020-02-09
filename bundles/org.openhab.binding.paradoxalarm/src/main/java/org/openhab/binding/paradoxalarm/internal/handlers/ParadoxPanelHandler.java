@@ -15,6 +15,8 @@ package org.openhab.binding.paradoxalarm.internal.handlers;
 import static org.openhab.binding.paradoxalarm.internal.handlers.ParadoxAlarmBindingConstants.*;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;
+import org.eclipse.smarthome.core.library.types.DateTimeType;
+import org.eclipse.smarthome.core.library.types.DecimalType;
 import org.eclipse.smarthome.core.library.types.StringType;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.openhab.binding.paradoxalarm.internal.model.ParadoxInformation;
@@ -37,6 +39,12 @@ public class ParadoxPanelHandler extends EntityBaseHandler {
     }
 
     @Override
+    public void initialize() {
+        super.initialize();
+        config = getConfigAs(PanelConfiguration.class);
+    }
+
+    @Override
     protected void updateEntity() {
         ParadoxPanel panel = ParadoxPanel.getInstance();
         StringType panelState = panel.isOnline() ? STATE_ONLINE : STATE_OFFLINE;
@@ -48,9 +56,13 @@ public class ParadoxPanelHandler extends EntityBaseHandler {
             updateProperty(PANEL_TYPE_PROPERTY_NAME, panelInformation.getPanelType().name());
             updateProperty(PANEL_HARDWARE_VERSION_PROPERTY_NAME, panelInformation.getHardwareVersion().toString());
             updateProperty(PANEL_APPLICATION_VERSION_PROPERTY_NAME,
-                panelInformation.getApplicationVersion().toString());
-            updateProperty(PANEL_BOOTLOADER_VERSION_PROPERTY_NAME,
-                panelInformation.getBootLoaderVersion().toString());
+                    panelInformation.getApplicationVersion().toString());
+            updateProperty(PANEL_BOOTLOADER_VERSION_PROPERTY_NAME, panelInformation.getBootLoaderVersion().toString());
+
+            updateState(PANEL_TIME, new DateTimeType(panel.getPanelTime()));
+            updateState(PANEL_AC_VOLTAGE, new DecimalType(panel.getAcLevel()));
+            updateState(PANEL_DC_VOLTAGE, new DecimalType(panel.getDcLevel()));
+            updateState(PANEL_BATTERY_VOLTAGE, new DecimalType(panel.getBatteryLevel()));
         }
     }
 }

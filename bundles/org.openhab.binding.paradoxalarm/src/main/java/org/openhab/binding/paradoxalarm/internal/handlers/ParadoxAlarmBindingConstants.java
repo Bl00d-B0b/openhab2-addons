@@ -62,6 +62,11 @@ public class ParadoxAlarmBindingConstants {
     public static final String PANEL_APPLICATION_VERSION_PROPERTY_NAME = "applicationVersion";
     public static final String PANEL_BOOTLOADER_VERSION_PROPERTY_NAME = "bootloaderVersion";
 
+    public static final String PANEL_TIME = "panelTime";
+    public static final String PANEL_AC_VOLTAGE = "acVoltage";
+    public static final String PANEL_DC_VOLTAGE = "dcVoltage";
+    public static final String PANEL_BATTERY_VOLTAGE = "batteryVoltage";
+
     public static final String PARTITION_LABEL_CHANNEL_UID = "partitionLabel";
     public static final String PARTITION_STATE_CHANNEL_UID = "state";
     @Deprecated // After implementation of channels for every possible state, the summarized additional states is no
