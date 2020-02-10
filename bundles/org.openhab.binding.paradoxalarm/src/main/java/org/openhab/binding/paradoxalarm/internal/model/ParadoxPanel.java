@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
+import org.eclipse.jdt.annotation.NonNull;
 import org.openhab.binding.paradoxalarm.internal.communication.IDataUpdateListener;
 import org.openhab.binding.paradoxalarm.internal.communication.IParadoxCommunicator;
 import org.openhab.binding.paradoxalarm.internal.exceptions.ParadoxRuntimeException;
@@ -36,6 +37,7 @@ public class ParadoxPanel implements IDataUpdateListener {
 
     private final Logger logger = LoggerFactory.getLogger(ParadoxPanel.class);
 
+    @NonNull
     private static ParadoxPanel paradoxPanel = new ParadoxPanel();
 
     private ParadoxInformation panelInformation;
@@ -71,10 +73,6 @@ public class ParadoxPanel implements IDataUpdateListener {
     }
 
     public boolean isPanelSupported() {
-        if (panelInformation == null) {
-            return false;
-        }
-
         PanelType panelType = panelInformation.getPanelType();
         return panelType == PanelType.EVO48 || panelType == PanelType.EVO192 || panelType == PanelType.EVOHD;
     }
@@ -167,7 +165,7 @@ public class ParadoxPanel implements IDataUpdateListener {
     }
 
     public boolean isOnline() {
-        return communicator.isOnline();
+        return communicator != null && communicator.isOnline();
     }
 
     public int getAcLevel() {

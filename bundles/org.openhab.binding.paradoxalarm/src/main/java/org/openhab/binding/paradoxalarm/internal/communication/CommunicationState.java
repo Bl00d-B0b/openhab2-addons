@@ -369,7 +369,6 @@ public enum CommunicationState implements IResponseReceiver {
         protected void runPhase(IParadoxInitialLoginCommunicator communicator, Object... args) {
             if (communicator != null) {
                 communicator.close();
-                communicator.setOnline(false);
             }
             ParadoxPanel.getInstance().dispose();
         }

@@ -102,8 +102,7 @@ public class ParadoxIP150BridgeHandler extends BaseBridgeHandler
 
             // Early exit. If panel type is configured and known to the binding skip auto-detection. Saves one full
             // initial login process to detect the panel type.
-            String panelType = config.getPanelType();
-            PanelType configuredPanelType = PanelType.from(panelType);
+            PanelType configuredPanelType = PanelType.from(config.getPanelType());
             if (configuredPanelType != PanelType.UNKNOWN) {
                 logger.debug("Configuration file has pannelType={}. Skipping Phase1 (Autodiscovery)",
                         configuredPanelType);

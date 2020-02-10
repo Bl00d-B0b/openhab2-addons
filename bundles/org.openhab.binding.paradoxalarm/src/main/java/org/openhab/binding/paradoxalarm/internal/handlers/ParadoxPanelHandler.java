@@ -49,7 +49,6 @@ public class ParadoxPanelHandler extends EntityBaseHandler {
         ParadoxPanel panel = ParadoxPanel.getInstance();
         StringType panelState = panel.isOnline() ? STATE_ONLINE : STATE_OFFLINE;
         updateState(PANEL_STATE_CHANNEL_UID, panelState);
-
         ParadoxInformation panelInformation = panel.getPanelInformation();
         if (panelInformation != null) {
             updateProperty(PANEL_SERIAL_NUMBER_PROPERTY_NAME, panelInformation.getSerialNumber());
