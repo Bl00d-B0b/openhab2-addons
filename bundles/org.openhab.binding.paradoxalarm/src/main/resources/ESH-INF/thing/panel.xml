@@ -68,7 +68,7 @@
 		<item-type>Number</item-type>
 		<label>Voltage</label>
 		<description>Voltage</description>
-		<state readOnly="true" pattern="%s V" />
+		<state readOnly="true" pattern="%fV" />
 	</channel-type>
 	<channel-type id="panelTime">
 		<item-type>DateTime</item-type>

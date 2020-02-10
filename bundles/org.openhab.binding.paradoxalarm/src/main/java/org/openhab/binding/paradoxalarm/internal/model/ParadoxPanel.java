@@ -13,11 +13,11 @@
 package org.openhab.binding.paradoxalarm.internal.model;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.openhab.binding.paradoxalarm.internal.communication.IDataUpdateListener;
 import org.openhab.binding.paradoxalarm.internal.communication.IParadoxCommunicator;
@@ -105,7 +105,7 @@ public class ParadoxPanel implements IDataUpdateListener {
         int year = firstPage[18] * 100 + firstPage[19];
         panelTime = ZonedDateTime.of(
                 LocalDateTime.of(year, firstPage[20], firstPage[21], firstPage[22], firstPage[23], firstPage[24]),
-                ZoneId.of("UTC"));
+                TimeZone.getDefault().toZoneId());
         acLevel = firstPage[25] & 0xFF;
         batteryLevel = (firstPage[26] & 0xFF) / 10;
         dcLevel = (firstPage[27] & 0xFF) / 10;
