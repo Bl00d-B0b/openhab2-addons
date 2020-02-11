@@ -59,7 +59,7 @@ public class ParadoxPanelHandler extends EntityBaseHandler {
             updateProperty(PANEL_BOOTLOADER_VERSION_PROPERTY_NAME, panelInformation.getBootLoaderVersion().toString());
 
             updateState(PANEL_TIME, new DateTimeType(panel.getPanelTime()));
-            updateState(PANEL_AC_VOLTAGE, new DecimalType(panel.getAcLevel()));
+            updateState(PANEL_AC_VOLTAGE, new DecimalType(panel.getVdcLevel()));
             updateState(PANEL_DC_VOLTAGE, new DecimalType(panel.getDcLevel()));
             updateState(PANEL_BATTERY_VOLTAGE, new DecimalType(panel.getBatteryLevel()));
         }

@@ -83,7 +83,7 @@ public class Main {
         ParadoxPanel panel = ParadoxPanel.getInstance();
         panel.getPartitions().stream().forEach(partition -> logger.debug("Partition={}", partition));
         panel.getZones().stream().filter(zone -> zone.getId() == 19).forEach(zone -> logger.debug("Zone={}", zone));
-        logger.debug("PanelTime={}, ACLevel={}, DCLevel={}, BatteryLevel={}", panel.getPanelTime(), panel.getAcLevel(),
+        logger.debug("PanelTime={}, ACLevel={}, DCLevel={}, BatteryLevel={}", panel.getPanelTime(), panel.getVdcLevel(),
                 panel.getDcLevel(), panel.getBatteryLevel());
     }
 

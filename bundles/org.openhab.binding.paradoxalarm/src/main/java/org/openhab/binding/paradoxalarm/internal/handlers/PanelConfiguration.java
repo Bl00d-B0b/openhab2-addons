@@ -20,17 +20,17 @@ import java.time.LocalDateTime;
  * @author Konstantin Polihronov - Initial contribution
  */
 public class PanelConfiguration extends EntityConfiguration {
-    private double acVoltage;
+    private double vdcVoltage;
     private double dcVoltage;
     private double batteryVoltage;
     private LocalDateTime panelTime;
 
-    public double getAcVoltage() {
-        return acVoltage;
+    public double getVdcVoltage() {
+        return vdcVoltage;
     }
 
-    public void setAcVoltage(double acVoltage) {
-        this.acVoltage = acVoltage;
+    public void setAcVoltage(double vdcVoltage) {
+        this.vdcVoltage = vdcVoltage;
     }
 
     public double getDcVoltage() {

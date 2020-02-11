@@ -64,8 +64,8 @@ Currently binding supports the following panels: EVO192, EVO48(not tested), EVO9
 | Channel                  | Type    | Description                                                                               |
 |--------------------------|---------|-------------------------------------------------------------------------------------------|
 | state                    | String  | Overall panel state                                                                       |
-| acVoltage                | Number  | AC Input Voltage                                                                          |
-| dcVoltage                | Number  | DC Input Voltage                                                                          |
+| vdcVoltage               | Number  | vDC Voltage                                                                          |
+| dcVoltage                | Number  | DC Voltage                                                                          |
 | batteryVoltage           | Number  | Battery Voltage                                                                           |
 | panelTime                | Date    | Panel internal time (Timezone is set to default zone of the Java virtual machine)         |
 

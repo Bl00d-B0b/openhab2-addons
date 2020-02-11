@@ -45,7 +45,7 @@ public class ParadoxPanel implements IDataUpdateListener {
     private List<Zone> zones;
     private IParadoxParser parser;
     private IParadoxCommunicator communicator;
-    private int acLevel;
+    private double acLevel;
     private double batteryLevel;
     private double dcLevel;
     private ZonedDateTime panelTime;
@@ -105,8 +105,11 @@ public class ParadoxPanel implements IDataUpdateListener {
                 LocalDateTime.of(year, firstPage[20], firstPage[21], firstPage[22], firstPage[23], firstPage[24]),
                 TimeZone.getDefault().toZoneId());
         acLevel = firstPage[25] & 0xFF;
-        batteryLevel = (firstPage[26] & 0xFF) / 10;
-        dcLevel = (firstPage[27] & 0xFF) / 10;
+        acLevel = Math.max(acLevel * (20.3 - 1.4) / 255.0 + 1.4, 0);
+        dcLevel = firstPage[27] & 0xFF;
+        dcLevel = Math.max(0, dcLevel * 22.8 / 255);
+        batteryLevel = firstPage[26] & 0xFF;
+        batteryLevel = Math.max(0, batteryLevel * 22.8 / 255);
     }
 
     private List<Zone> createZones() {
@@ -168,7 +171,7 @@ public class ParadoxPanel implements IDataUpdateListener {
         return communicator != null && communicator.isOnline();
     }
 
-    public int getAcLevel() {
+    public double getVdcLevel() {
         return acLevel;
     }
 

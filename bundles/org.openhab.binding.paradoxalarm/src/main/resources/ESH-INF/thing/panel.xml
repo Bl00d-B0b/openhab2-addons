@@ -14,7 +14,7 @@
 
 		<channels>
 			<channel id="state" typeId="panelState" />
-			<channel id="acVoltage" typeId="voltage" />
+			<channel id="vdcVoltage" typeId="voltage" />
 			<channel id="dcVoltage" typeId="voltage" />
 			<channel id="batteryVoltage" typeId="voltage" />
 			<channel id="panelTime" typeId="panelTime" />
