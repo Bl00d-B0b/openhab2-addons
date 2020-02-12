@@ -61,13 +61,13 @@ Currently binding supports the following panels: EVO192, EVO48(not tested), EVO9
 | disarmEnabled     | Optional boolean flag. Valid for partitions. When set to true the command DISARM will be allowed for the partition where the flag is enabled. CAUTION: Enabling DISARM command can be dangerous. If attacker can gain access to your OpenHAB (via API or UI), this command can be used to disarm your armed partition (area) |
 
 ### Panel channels:
-| Channel                  | Type    | Description                                                                               |
-|--------------------------|---------|-------------------------------------------------------------------------------------------|
-| state                    | String  | Overall panel state                                                                       |
-| vdcVoltage               | Number  | vDC Voltage                                                                          |
-| dcVoltage                | Number  | DC Voltage                                                                          |
-| batteryVoltage           | Number  | Battery Voltage                                                                           |
-| panelTime                | Date    | Panel internal time (Timezone is set to default zone of the Java virtual machine)         |
+| Channel                  | Type     | Description                                                                               |
+|--------------------------|----------|-------------------------------------------------------------------------------------------|
+| state                    | String   | Overall panel state                                                                       |
+| vdcVoltage               | Number   | Supply Voltage                                                                          |
+| dcVoltage                | Number   | Board DC Voltage                                                                          |
+| batteryVoltage           | Number   | Battery Voltage                                                                           |
+| panelTime                | DateTime | Panel internal time (Timezone is set to default zone of the Java virtual machine)         |
 
 ### Partition channels:
 
@@ -132,7 +132,12 @@ Currently binding supports the following panels: EVO192, EVO48(not tested), EVO9
 
 //COMMUNICATOR BRIDGE
     String paradoxSendCommand "Send command to IP150" {channel="paradoxalarm:ip150:ip150:communicationCommand"}
+
     String panelState "Paradox panel state: [%s]"<network> (Paradox) { channel = "paradoxalarm:ip150:ip150:communicationState" }
+    Number paradoxVdcVoltage "Paradox VDC: [%.1f V]" <lock> (Paradox) { channel = "paradoxalarm:panel:ip150:panel:vdcVoltage" }
+    Number paradoxDcVoltage "Paradox DC: [%.1f V]" <lock> (Paradox) { channel = "paradoxalarm:panel:ip150:panel:dcVoltage" }
+    Number paradoxBatteryVoltage "Paradox Battery: [%.1fV]" <lock> (Paradox) { channel = "paradoxalarm:panel:ip150:panel:batteryVoltage" }
+    DateTime paradoxTime "Paradox Time: [%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1tS]" <lock> (Paradox) { channel = "paradoxalarm:panel:ip150:panel:panelTime" }
 
 //PARTITIONS
     String partition1State "Magnetic sensors - Floor 1: [%s]" (Partitions) { channel = "paradoxalarm:partition:ip150:partition1:state" }
@@ -150,6 +155,12 @@ Currently binding supports the following panels: EVO192, EVO48(not tested), EVO9
         Frame label="IP150 communication" {
             Text item=panelState valuecolor=[panelState=="Online"="green", panelState=="Offline"="red"]
             Selection item=paradoxSendCommand mappings=["LOGOUT"="Logout", "LOGIN"="Login", "RESET"="Reset"]
+        }
+        Frame label="Panel" {
+				Text item=paradoxTime
+				Text item=paradoxAcVoltage
+				Text item=paradoxDcVoltage
+				Text item=paradoxBatteryVoltage
         }
         Frame label="Partitions" {
             Text item=partition1State valuecolor=[partition1State=="Disarmed"="green", partition1State=="Armed"="red"]

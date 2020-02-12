@@ -67,9 +67,9 @@ public class CommandPayload implements IPayload {
 
     private int calculateNibbleToSet() {
         if ((partitionNumber - 1) % 2 == 0) {
-            return command.getCommand() << 8;
+            return (command.getCommand() << 4) & 0xF0;
         } else {
-            return command.getCommand();
+            return command.getCommand() & 0x0F;
         }
     }
 }
