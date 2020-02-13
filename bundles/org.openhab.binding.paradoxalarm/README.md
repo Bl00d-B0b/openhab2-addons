@@ -133,11 +133,11 @@ Currently binding supports the following panels: EVO192, EVO48(not tested), EVO9
 //COMMUNICATOR BRIDGE
     String paradoxSendCommand "Send command to IP150" {channel="paradoxalarm:ip150:ip150:communicationCommand"}
 
-    String panelState "Paradox panel state: [%s]"<network> (Paradox) { channel = "paradoxalarm:ip150:ip150:communicationState" }
-    Number paradoxVdcVoltage "Paradox VDC: [%.1f V]" <lock> (Paradox) { channel = "paradoxalarm:panel:ip150:panel:vdcVoltage" }
-    Number paradoxDcVoltage "Paradox DC: [%.1f V]" <lock> (Paradox) { channel = "paradoxalarm:panel:ip150:panel:dcVoltage" }
-    Number paradoxBatteryVoltage "Paradox Battery: [%.1fV]" <lock> (Paradox) { channel = "paradoxalarm:panel:ip150:panel:batteryVoltage" }
-    DateTime paradoxTime "Paradox Time: [%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1tS]" <lock> (Paradox) { channel = "paradoxalarm:panel:ip150:panel:panelTime" }
+    String panelState "Panel State: [%s]" <network> (Paradox) { channel = "paradoxalarm:ip150:ip150:communicationState" }
+    Number paradoxVdcVoltage "Supply Voltage: [%.1f V]" <lock> (Paradox) { channel = "paradoxalarm:panel:ip150:panel:vdcVoltage" }
+    Number paradoxDcVoltage "Board Voltage: [%.1f V]" <lock> (Paradox) { channel = "paradoxalarm:panel:ip150:panel:dcVoltage" }
+    Number paradoxBatteryVoltage "Battery Voltage: [%.1f V]" <lock> (Paradox) { channel = "paradoxalarm:panel:ip150:panel:batteryVoltage" }
+    DateTime paradoxTime "Actual Time: [%1$tY-%1$tm-%1$td %1$tH:%1$tM]" <time> (Paradox) { channel = "paradoxalarm:panel:ip150:panel:panelTime" }
 
 //PARTITIONS
     String partition1State "Magnetic sensors - Floor 1: [%s]" (Partitions) { channel = "paradoxalarm:partition:ip150:partition1:state" }
@@ -151,16 +151,16 @@ Currently binding supports the following panels: EVO192, EVO48(not tested), EVO9
 ## Example sitemap configuration
 
 ```java
-    Text label="Security" icon="lock" {
+    sitemap paradox label="Paradox" icon="lock" {
         Frame label="IP150 communication" {
             Text item=panelState valuecolor=[panelState=="Online"="green", panelState=="Offline"="red"]
             Selection item=paradoxSendCommand mappings=["LOGOUT"="Logout", "LOGIN"="Login", "RESET"="Reset"]
         }
         Frame label="Panel" {
-				Text item=paradoxTime
-				Text item=paradoxAcVoltage
-				Text item=paradoxDcVoltage
-				Text item=paradoxBatteryVoltage
+	    Text item=paradoxTime
+	    Text item=paradoxAcVoltage
+	    Text item=paradoxDcVoltage
+	    Text item=paradoxBatteryVoltage
         }
         Frame label="Partitions" {
             Text item=partition1State valuecolor=[partition1State=="Disarmed"="green", partition1State=="Armed"="red"]
